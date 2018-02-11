@@ -1,0 +1,27 @@
+{
+    "name": "ico-template",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@gitlab.com/limelabs/ico-template.git"
+    },
+    "author": "LimeChain",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://gitlab.com/limelabs/ico-template/issues"
+    },
+    "homepage": "https://gitlab.com/limelabs/ico-template#README",
+    "dependencies": {
+        "truffle": "^4.0.4",
+        "zeppelin-solidity": "git+https://github.com/LimelabsTech/zeppelin-solidity.git"
+    },
+    "devDependencies": {
+        "web3": "^1.0.0-beta.27",
+        "truffle-hdwallet-provider": "0.0.3"
+    }
+}
