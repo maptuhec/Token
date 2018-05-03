@@ -1,7 +1,6 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.23;
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
 import '../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol';
-import './VestibleToken.sol';
 
 contract Vesting is Ownable {
 	address public tokenAddress;
@@ -9,8 +8,8 @@ contract Vesting is Ownable {
 	uint256 public tokenBalance;
 
 	//First half of the year is 182 and the second is 183
-	uint256 public firstMonth = 10 days;
-	uint256 public secondMonth = 11 days;
+	uint256 public firstMonth = 182 days;
+	uint256 public secondMonth = 183 days;
 	uint256 public firstPeriod = firstMonth;
 	uint256 public secondPeriod = firstMonth + secondMonth;
 	uint256 public thirdPeriod = secondPeriod + firstMonth;
@@ -19,7 +18,7 @@ contract Vesting is Ownable {
 
 	event LogTransferSuccessful(address recepient, uint amount);
 
-	function Vesting(address _tokenAddress, uint256 _startDate ) public {
+	constructor(address _tokenAddress, uint256 _startDate ) public {
 		require(_tokenAddress > address(0));
 		require(_startDate > 0);
 		tokenAddress = _tokenAddress;
@@ -43,7 +42,7 @@ contract Vesting is Ownable {
 		if (now < startDate + firstPeriod) {
 			require(owedFirstPeriodTokens > claimedTokens);
 			token.transfer(owner, (owedFirstPeriodTokens - claimedTokens));
-			LogTransferSuccessful(owner, (owedFirstPeriodTokens - claimedTokens));
+			emit LogTransferSuccessful(owner, (owedFirstPeriodTokens - claimedTokens));
 			claimedTokens = owedFirstPeriodTokens;
 			return;
 		}
@@ -51,7 +50,7 @@ contract Vesting is Ownable {
 		if (now < startDate + secondPeriod && now > startDate + firstPeriod ) {
 			require(owedSecondPeriodTokens > claimedTokens);
 			token.transfer(owner, owedSecondPeriodTokens - claimedTokens);
-			LogTransferSuccessful(owner, owedSecondPeriodTokens - claimedTokens);
+			emit LogTransferSuccessful(owner, owedSecondPeriodTokens - claimedTokens);
 			claimedTokens = owedSecondPeriodTokens;
 			return;
 		}
@@ -59,7 +58,7 @@ contract Vesting is Ownable {
 		if (now < startDate + thirdPeriod && now > startDate + secondPeriod) {
 			require(owedThirdPeriodTokens > claimedTokens);
 			token.transfer(owner, owedThirdPeriodTokens - claimedTokens);
-			LogTransferSuccessful(owner, owedThirdPeriodTokens - claimedTokens);
+			emit LogTransferSuccessful(owner, owedThirdPeriodTokens - claimedTokens);
 			claimedTokens = owedThirdPeriodTokens;
 			return;
 		}
@@ -67,7 +66,7 @@ contract Vesting is Ownable {
 		if (now < startDate + fourthPeriod && now > startDate + thirdPeriod) {
 			require(owedFourthPeriodTokens > claimedTokens);
 			token.transfer(owner, owedFourthPeriodTokens - claimedTokens);
-			LogTransferSuccessful(owner, owedFourthPeriodTokens - claimedTokens);
+			emit LogTransferSuccessful(owner, owedFourthPeriodTokens - claimedTokens);
 			claimedTokens = owedFourthPeriodTokens;
 			return;
 		}
@@ -75,14 +74,14 @@ contract Vesting is Ownable {
 		if (now < startDate + fifthPeriod && now > startDate + fourthPeriod) {
 			require(owedFifthPeriodTokens > claimedTokens);
 			token.transfer(owner, owedFifthPeriodTokens - claimedTokens);
-			LogTransferSuccessful(owner, owedFifthPeriodTokens - claimedTokens);
+			emit LogTransferSuccessful(owner, owedFifthPeriodTokens - claimedTokens);
 			claimedTokens = owedFifthPeriodTokens;
 			return;
 		} 
 		if (now > startDate + fifthPeriod) {
 			tokenBalance = token.balanceOf(this);
 			token.transfer(owner, tokenBalance);
-			LogTransferSuccessful(owner, tokenBalance);
+			emit LogTransferSuccessful(owner, tokenBalance);
 			claimedTokens = tokenBalance;
 			return;
 		}

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.23;
 
 import "./ICOToken.sol";
 import "../node_modules/zeppelin-solidity/contracts/crowdsale/FinalizableCrowdsale.sol";
@@ -36,9 +36,7 @@ contract ICOCrowdsale is Ownable, Pausable, FinalizableCrowdsale {
 
   uint256 constant NORMAL_RATE = 5000;
 
-  event LogBountyTokenMinted(address minter, address beneficiary, uint256 amount);
-
-  function ICOCrowdsale(uint256 _startTime, uint256 _endTime, address _wallet) public
+  constructor (uint256 _startTime, uint256 _endTime, address _wallet) public
     FinalizableCrowdsale()
     Crowdsale(_startTime, _endTime, NORMAL_RATE, _wallet)
   {
@@ -109,7 +107,6 @@ contract ICOCrowdsale is Ownable, Pausable, FinalizableCrowdsale {
   function createBountyToken(address beneficiary, uint256 amount) public onlyOwner returns(bool) {
     require(!hasEnded());
     token.mint(beneficiary, amount);
-    LogBountyTokenMinted(msg.sender, beneficiary, amount);
     return true;
   }
 

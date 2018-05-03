@@ -365,19 +365,6 @@ contract('ICOCrowdsale', function (accounts) {
 
 		})
 
-		it("should emit event on change", async function () {
-
-			const expectedEvent = 'LogBountyTokenMinted';
-
-			const bonusTokens = 500 * weiInEther;
-			let result = await crowdsaleInstance.createBountyToken(_alice, bonusTokens, {
-				from: _owner
-			});
-			assert.lengthOf(result.logs, 1, "There should be 1 event emitted from setRate!");
-			assert.strictEqual(result.logs[0].event, expectedEvent, `The event emitted was ${result.logs[0].event} instead of ${expectedEvent}`);
-		});
-
-
 	})
 
 	describe('finalization', () => {

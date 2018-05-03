@@ -1,7 +1,7 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.23;
 
 
-import "../node_modules/zeppelin-solidity/contracts/token/MintableToken.sol";
+import "../node_modules/zeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
 import "../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 
@@ -20,6 +20,6 @@ contract ICOToken is MintableToken, Pausable {
   /**
    * @dev Constructor that gives msg.sender all of existing tokens.
    */
-  function ICOToken() public {
+  constructor() public {
   }
 }
