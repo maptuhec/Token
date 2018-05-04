@@ -1,6 +1,5 @@
 const ICOCappedRefundableCrowdsale = artifacts.require("./ICOCappedRefundableCrowdsale.sol");
 const ICOToken = artifacts.require("./ICOToken.sol");
-const Whitelist = artifacts.require("./Whitelist.sol");
 const expectThrow = require('../util').expectThrow;
 const timeTravel = require('../util').timeTravel;
 const web3FutureTime = require('../util').web3FutureTime;
@@ -83,9 +82,7 @@ contract('ICOCappedRefundableCrowdsale', function (accounts) {
 			let tokenAddress = await crowdsaleInstance.token.call();
 
 			tokenInstance = ICOToken.at(tokenAddress);
-			whitelistInstance = await Whitelist.new({
-				from: _owner
-			})
+
 			let addressesToWhitelist = [_wallet, _alice]
 			await crowdsaleInstance.addAddressesToWhitelist(addressesToWhitelist, {
 				from: _owner
@@ -124,9 +121,6 @@ contract('ICOCappedRefundableCrowdsale', function (accounts) {
 
 			tokenInstance = ICOToken.at(tokenAddress);
 
-			whitelistInstance = await Whitelist.new({
-				from: _owner
-			})
 			let addressesToWhitelist = [_wallet, _alice]
 			await crowdsaleInstance.addAddressesToWhitelist(addressesToWhitelist, {
 				from: _owner
