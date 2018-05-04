@@ -1,5 +1,6 @@
 const ICOCrowdsale = artifacts.require("./ICOCrowdsale.sol");
 const ICOToken = artifacts.require("./ICOToken.sol");
+const Whitelist = artifacts.require("./Whitelist.sol");
 const expectThrow = require('../util').expectThrow;
 const timeTravel = require('../util').timeTravel;
 const web3FutureTime = require('../util').web3FutureTime;
@@ -8,6 +9,7 @@ const BigNumber = require('bignumber.js');
 contract('ICOCrowdsale', function (accounts) {
 
 	let crowdsaleInstance;
+	let whitelistInstance;
 	let _startTime;
 	let _endTime;
 
@@ -147,10 +149,30 @@ contract('ICOCrowdsale', function (accounts) {
 
 			tokenInstance = ICOToken.at(tokenAddress);
 
+			whitelistInstance = await Whitelist.new({
+				from: _owner
+			})
+			let addressesToWhitelist = [_wallet, _alice]
+			await crowdsaleInstance.addAddressesToWhitelist(addressesToWhitelist, {
+				from: _owner
+			})
+
+		})
+
+		it("should throw if trying to buy tokens and the buyer is not whitelisted", async function () {
+			await timeTravel(web3, day);
+
+			const weiSent = 1 * weiInEther;
+			await expectThrow(crowdsaleInstance.buyTokens(_wallet, {
+				value: weiSent,
+				from: _carol
+			}))
+
 		})
 
 		it("should throw on wei below min amount", async function () {
 			const weiSent = minWeiAmount / 2;
+
 			await expectThrow(crowdsaleInstance.buyTokens(_wallet, {
 				value: weiSent,
 				from: _wallet
@@ -381,6 +403,13 @@ contract('ICOCrowdsale', function (accounts) {
 			let tokenAddress = await crowdsaleInstance.token.call();
 
 			tokenInstance = ICOToken.at(tokenAddress);
+			whitelistInstance = await Whitelist.new({
+				from: _owner
+			})
+
+			await crowdsaleInstance.addAddressToWhitelist(_wallet, {
+				from: _owner
+			})
 
 			await timeTravel(web3, thirtyDays);
 			const weiSent = 1 * weiInEther;

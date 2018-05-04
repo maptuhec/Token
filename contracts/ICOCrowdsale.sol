@@ -4,6 +4,7 @@ import "./ICOToken.sol";
 import "../node_modules/zeppelin-solidity/contracts/crowdsale/FinalizableCrowdsale.sol";
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
 import '../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol';
+import './Whitelist.sol';
 
 /**
  * @title ICOCrowdsale
@@ -16,7 +17,7 @@ import '../node_modules/zeppelin-solidity/contracts/lifecycle/Pausable.sol';
  * After adding multiple features it's good practice to run integration tests
  * to ensure that subcontracts works together as intended.
  */
-contract ICOCrowdsale is Ownable, Pausable, FinalizableCrowdsale {
+contract ICOCrowdsale is Ownable, Pausable, FinalizableCrowdsale, Whitelist {
 
   uint256 constant PRESALE_CAP = 850 ether;
   uint256 constant PRESALE_RATE = 6750;
@@ -62,7 +63,7 @@ contract ICOCrowdsale is Ownable, Pausable, FinalizableCrowdsale {
     _token.transferOwnership(owner);
   }
 
-  function buyTokens(address beneficiary) public payable {
+  function buyTokens(address beneficiary) onlyWhitelisted() public payable {
     uint256 minContributionAmount = 100 finney; // 0.1 ETH
     require(msg.value >= minContributionAmount);
     super.buyTokens(beneficiary);
