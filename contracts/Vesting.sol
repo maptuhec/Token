@@ -8,13 +8,13 @@ contract Vesting is Ownable {
 	uint256 public tokenBalance;
 
 	//First half of the year is 182 and the second is 183
-	uint256 public firstMonth = 182 days;
-	uint256 public secondMonth = 183 days;
-	uint256 public firstPeriod = firstMonth;
-	uint256 public secondPeriod = firstMonth + secondMonth;
-	uint256 public thirdPeriod = secondPeriod + firstMonth;
-	uint256 public fourthPeriod = thirdPeriod + secondMonth;
-	uint256 public fifthPeriod = fourthPeriod + firstMonth;
+	uint256 public firstHalf = 182 days;
+	uint256 public secondHalf = 183 days;
+	uint256 public firstPeriod = firstHalf;
+	uint256 public secondPeriod = firstHalf + secondHalf;
+	uint256 public thirdPeriod = secondPeriod + firstHalf;
+	uint256 public fourthPeriod = thirdPeriod + secondHalf + 1 days; //2020 is leap year and we add one more day
+	uint256 public fifthPeriod = fourthPeriod + firstHalf;
 
 	event LogTransferSuccessful(address recepient, uint amount);
 

@@ -26,7 +26,7 @@ contract('Vesting', function (accounts) {
 	const firstPeriod = firstHalf;
 	const secondPeriod = firstPeriod + secondHalf;
 	const thirdPeriod = secondPeriod + firstHalf;
-	const fourthPeriod = thirdPeriod + secondHalf;
+	const fourthPeriod = thirdPeriod + secondHalf + day;
 	const fifthPeriod = fourthPeriod + firstHalf;
 
 	describe("All unit tests with start date in the past", () => {
@@ -95,7 +95,7 @@ contract('Vesting', function (accounts) {
 		})
 
 		it("should transfer the tokens to the owner for the fifth period", async function () {
-			await timeTravel(web3, fourthPeriod + day);
+			await timeTravel(web3, fourthPeriod + (day * 2));
 			await vestingContract.claim({
 				from: contractOwnerAddress
 			});
@@ -154,7 +154,7 @@ contract('Vesting', function (accounts) {
 
 		it("should emit one event if transfer for the fifth period is successful", async function () {
 			const expectedEvent = 'LogTransferSuccessful'
-			await timeTravel(web3, fourthPeriod + day);
+			await timeTravel(web3, fourthPeriod + (day * 2));
 			let result = await vestingContract.claim({
 				from: contractOwnerAddress
 			});
@@ -222,7 +222,7 @@ contract('Vesting', function (accounts) {
 		})
 
 		it("should throw if the fourth period tokens are not greater than the claimed tokens", async function () {
-			await timeTravel(web3, fourthPeriod + day);
+			await timeTravel(web3, fourthPeriod + (day * 2));
 			await vestingContract.claim({
 				from: contractOwnerAddress
 			});
